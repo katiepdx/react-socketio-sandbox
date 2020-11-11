@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
 // import socket io 
 import io from 'socket.io-client';
@@ -8,8 +9,6 @@ export default function App() {
   const [messages, setMessages] = useState([]);
 
   const socket = io('localhost:7890');
-
-  console.log('in app jsx');
 
   const handleMessage = ({ target }) => {
     setMessage(target.value);
@@ -26,6 +25,24 @@ export default function App() {
     setMessage('');
   };
 
+  const addMessage = data => {
+    console.log(data, 'add message in app.jsx');
+    setMessages([...messages, data]);
+    console.log(messages, 'messages in state');
+  };
+
+  socket.on('RECEIVE_MESSAGE', (data) => {
+    addMessage(data);
+  });
+
+  const messageElements = messages.map(message => {
+    return (
+      <div>
+        {message.author}: {message.message}
+      </div>
+    );
+  });
+
   return (
     <div>
       <input onChange={handleUserName} type="text" placeholder="Username" />
@@ -33,6 +50,9 @@ export default function App() {
       <input onChange={handleMessage} type="text" placeholder="Message" />
       <br/>
       <button onClick={handleClick}>Send</button>
+      <div>
+        {messageElements}
+      </div>
     </div>
   );
 }

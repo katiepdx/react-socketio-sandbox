@@ -18,7 +18,7 @@ io.on('connection', (socket) => {
 
   //SEND_MESSAGE event received
   socket.on('SEND_MESSAGE', (data) => {
-    io.emit('RECIEVE_MESSAGE', data);
-    console.log(data);
+    io.emit('RECEIVE_MESSAGE', data);
+    console.log(`${data.author} joined the chat`);
   });
 });
