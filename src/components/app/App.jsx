@@ -7,6 +7,7 @@ export default function App() {
   const [userName, setUserName] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState('');
 
   const socket = io('localhost:7890');
 
@@ -35,6 +36,10 @@ export default function App() {
     addMessage(data);
   });
 
+  socket.on('connectToRoom', (data) => {
+    setRoom(data);
+  });
+
   const messageElements = messages.map(message => {
     return (
       <div>
@@ -45,11 +50,15 @@ export default function App() {
 
   return (
     <div>
+      <div>{room}</div>
+
       <input onChange={handleUserName} type="text" placeholder="Username" />
       <br/>
       <input onChange={handleMessage} type="text" placeholder="Message" />
       <br/>
+      
       <button onClick={handleClick}>Send</button>
+
       <div>
         {messageElements}
       </div>

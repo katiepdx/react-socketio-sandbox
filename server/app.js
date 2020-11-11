@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // server
 const express = require('express');
 const app = express();
@@ -16,6 +17,10 @@ io.on('connection', (socket) => {
   console.log(socket.id, 'SOCKET ID');
   // console.log(socket, 'SOCKET')
 
+  //ROOMS
+  const roomno = 1;
+  socket.join('room-' + roomno);
+  io.sockets.in('room-' + roomno).emit('connectToRoom', 'You are in room no. ' + roomno);
   //SEND_MESSAGE event received
   socket.on('SEND_MESSAGE', (data) => {
     io.emit('RECEIVE_MESSAGE', data);
