@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import socket io 
 import io from 'socket.io-client';
 
@@ -8,8 +8,26 @@ export default function App() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState('');
+  const [socket, setSocket] = useState('')
 
-  const socket = io('localhost:7890');
+  const addMessage = data => {
+    console.log(data, 'add message in app.jsx');
+    setMessages(messages => [...messages, data]);
+    console.log(messages, 'messages in state');
+  };
+  
+  useEffect(() => {
+    const socket = io('localhost:7890');
+    setSocket(socket)
+
+    socket.on('RECEIVE_MESSAGE', (data) => {
+      addMessage(data);
+    });
+  
+    socket.on('connectToRoom', (data) => {
+      setRoom(data);
+    });
+  }, [])
 
   const handleMessage = ({ target }) => {
     setMessage(target.value);
@@ -26,20 +44,6 @@ export default function App() {
     setMessage('');
   };
 
-  const addMessage = data => {
-    console.log(data, 'add message in app.jsx');
-    setMessages([...messages, data]);
-    console.log(messages, 'messages in state');
-  };
-
-  socket.on('RECEIVE_MESSAGE', (data) => {
-    addMessage(data);
-  });
-
-  socket.on('connectToRoom', (data) => {
-    setRoom(data);
-  });
-
   const messageElements = messages.map(message => {
     return (
       <div>
@@ -53,10 +57,10 @@ export default function App() {
       <div>{room}</div>
 
       <input onChange={handleUserName} type="text" placeholder="Username" />
-      <br/>
+      <br />
       <input onChange={handleMessage} type="text" placeholder="Message" />
-      <br/>
-      
+      <br />
+
       <button onClick={handleClick}>Send</button>
 
       <div>

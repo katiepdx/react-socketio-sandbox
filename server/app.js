@@ -21,9 +21,17 @@ io.on('connection', (socket) => {
   const roomno = 1;
   socket.join('room-' + roomno);
   io.sockets.in('room-' + roomno).emit('connectToRoom', 'You are in room no. ' + roomno);
+
   //SEND_MESSAGE event received
+  // socket one person
   socket.on('SEND_MESSAGE', (data) => {
+    // io emit - send to everyone
     io.emit('RECEIVE_MESSAGE', data);
     console.log(`${data.author} joined the chat`);
   });
 });
+
+// socket.broadcast - everyone but the person who sent it
+// socket.emit - just connected socket 
+// io.emit - everybody 
+// io.to.emit - everybody in a room
