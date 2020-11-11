@@ -8,7 +8,7 @@ export default function App() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState('');
-  const [socket, setSocket] = useState('')
+  const [socket, setSocket] = useState('');
 
   const addMessage = data => {
     console.log(data, 'add message in app.jsx');
@@ -18,7 +18,7 @@ export default function App() {
   
   useEffect(() => {
     const socket = io('localhost:7890');
-    setSocket(socket)
+    setSocket(socket);
 
     socket.on('RECEIVE_MESSAGE', (data) => {
       addMessage(data);
@@ -27,7 +27,7 @@ export default function App() {
     socket.on('connectToRoom', (data) => {
       setRoom(data);
     });
-  }, [])
+  }, []);
 
   const handleMessage = ({ target }) => {
     setMessage(target.value);
@@ -52,6 +52,10 @@ export default function App() {
     );
   });
 
+  const handleRoom = ({ target }) => {
+    socket.emit('ROOM', target.value);
+  };
+
   return (
     <div>
       <div>{room}</div>
@@ -66,6 +70,9 @@ export default function App() {
       <div>
         {messageElements}
       </div>
+
+      <button onClick={handleRoom} value="room-1">Room 1</button>
+      <button onClick={handleRoom} value="room-2">Room 2</button>
     </div>
   );
 }
