@@ -40,6 +40,13 @@ io.on('connection', (socket) => {
     io.sockets.in(room).emit('RECEIVE_MESSAGE', data);
     console.log(`${data.author} joined the chat`);
   });
+
+  socket.on('SEND_QUESTION', (data) => {
+    console.log(data, 'SEND_QUESTION');
+    io.sockets.in(room).emit(
+      'RECEIVE_QUESTION', data
+    );
+  });
 });
 
 // socket.broadcast - everyone but the person who sent it
